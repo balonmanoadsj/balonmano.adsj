@@ -16,14 +16,18 @@ import {
   Menu,
   X,
   Camera,
+  Languages,
 } from 'lucide-react';
 import { SectionAuthProvider, useSectionAuth } from './context/SectionAuthContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ClubLogo } from './components/ClubLogo';
 import { NewsSection } from './components/NewsSection';
 import { TeamsSection } from './components/TeamsSection';
 import { ContactSection } from './components/ContactSection';
 import { SectionLockGate } from './components/SectionLockGate';
 import { DriveSectionHub } from './components/DriveSectionHub';
+import { PWAInstallButton } from './components/PWAInstallButton';
+import { OfflineIndicator } from './components/OfflineIndicator';
 import { handballImages } from './assets/images';
 
 type NavTab = 'inicio' | 'noticias' | 'equipos' | 'seccion' | 'contacto';
@@ -32,6 +36,7 @@ function MainAppContent() {
   const [activeTab, setActiveTab] = useState<NavTab>('inicio');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isUnlocked, lockSection } = useSectionAuth();
+  const { language, setLanguage, t } = useLanguage();
 
   const handleNavClick = (tab: NavTab) => {
     setActiveTab(tab);
@@ -43,25 +48,51 @@ function MainAppContent() {
     <div className="min-h-screen bg-white text-slate-900 flex flex-col selection:bg-emerald-700 selection:text-white">
       {/* TOP TICKER BAR (Navy Blue & Emerald/Gold Club Colors) */}
       <div className="bg-blue-950 text-white py-1.5 px-4 text-[11px]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="font-semibold">AD San Juan • Donibane Kirol Elkartea</span>
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+            <span className="font-semibold truncate">{t.common.clubFull}</span>
             <span className="text-blue-300/60 hidden sm:inline">•</span>
-            <span className="text-blue-100/90 hidden sm:inline">Pabellón Polideportivo de Pamplona</span>
+            <span className="text-blue-100/90 hidden sm:inline">{t.common.pamplonaPavilion}</span>
           </div>
 
-          <div className="flex items-center gap-4">
-            <span className="hidden md:inline text-[11px] text-blue-200">
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            <span className="hidden lg:inline text-[11px] text-blue-200">
               balonmano.adsj@gmail.com
             </span>
+
+            {/* Language Selector ES / EU */}
+            <div
+              className="inline-flex items-center bg-blue-900/90 rounded-lg p-0.5 border border-blue-800"
+              title={t.nav.langSwitchTitle}
+            >
+              <button
+                type="button"
+                onClick={() => setLanguage('es')}
+                className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                  language === 'es' ? 'bg-white text-blue-950 shadow-2xs' : 'text-blue-200 hover:text-white'
+                }`}
+              >
+                ES
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage('eu')}
+                className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                  language === 'eu' ? 'bg-emerald-500 text-white shadow-2xs' : 'text-blue-200 hover:text-white'
+                }`}
+              >
+                EU
+              </button>
+            </div>
+
             {isUnlocked ? (
               <button
                 onClick={() => handleNavClick('seccion')}
                 className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-300 bg-emerald-900/60 hover:bg-emerald-800/80 px-2.5 py-0.5 rounded-full border border-emerald-500/40 transition-colors cursor-pointer"
               >
                 <Unlock className="w-3 h-3" />
-                <span>Sección Activa</span>
+                <span>{t.common.sectionActive}</span>
               </button>
             ) : (
               <button
@@ -69,7 +100,8 @@ function MainAppContent() {
                 className="inline-flex items-center gap-1 text-[11px] text-blue-100 hover:text-emerald-300 transition-colors cursor-pointer font-medium"
               >
                 <Lock className="w-3 h-3 text-amber-400" />
-                <span>Acceso Clave Sección</span>
+                <span className="hidden sm:inline">{t.common.accessKey}</span>
+                <span className="sm:hidden">Clave</span>
               </button>
             )}
           </div>
@@ -87,7 +119,7 @@ function MainAppContent() {
             <ClubLogo size="md" />
           </button>
 
-          {/* Desktop Navigation (Clean 4 links; Área de la Sección accessed via top bar) */}
+          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1.5">
             <button
               onClick={() => handleNavClick('inicio')}
@@ -98,7 +130,7 @@ function MainAppContent() {
               }`}
             >
               <Home className="w-4 h-4" />
-              <span>Inicio</span>
+              <span>{t.nav.home}</span>
             </button>
 
             <button
@@ -110,7 +142,7 @@ function MainAppContent() {
               }`}
             >
               <Newspaper className="w-4 h-4" />
-              <span>Noticias y Novedades</span>
+              <span>{t.nav.news}</span>
             </button>
 
             <button
@@ -122,9 +154,9 @@ function MainAppContent() {
               }`}
             >
               <Users className="w-4 h-4" />
-              <span>Equipos</span>
+              <span>{t.nav.teams}</span>
               <span className="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-200 px-1.5 py-0.2 rounded font-bold">
-                Fem
+                {t.nav.teamsFemBadge}
               </span>
             </button>
 
@@ -137,25 +169,57 @@ function MainAppContent() {
               }`}
             >
               <Mail className="w-4 h-4" />
-              <span>Contacto</span>
+              <span>{t.nav.contact}</span>
             </button>
+
+            <div className="ml-2 pl-2 border-l border-slate-200">
+              <PWAInstallButton variant="header" />
+            </div>
           </nav>
 
           {/* Mobile hamburger button */}
-          <div className="flex items-center lg:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2.5 rounded-xl bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-200"
-              aria-label="Abrir menú de navegación"
+              aria-label={t.nav.openMenu}
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu (Keeps Área Privada de Sección inside hamburger menu) */}
+        {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white border-b border-slate-200 px-4 py-4 space-y-2 shadow-lg">
+            {/* Mobile Language Switcher */}
+            <div className="flex items-center justify-between px-4 py-2 bg-slate-50 rounded-xl border border-slate-200 mb-2">
+              <span className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                <Languages className="w-4 h-4 text-emerald-700" />
+                <span>{t.nav.langSwitchTitle}</span>
+              </span>
+              <div className="inline-flex bg-white rounded-lg p-0.5 border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setLanguage('es')}
+                  className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer ${
+                    language === 'es' ? 'bg-blue-950 text-white' : 'text-slate-600'
+                  }`}
+                >
+                  Castellano
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLanguage('eu')}
+                  className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer ${
+                    language === 'eu' ? 'bg-emerald-700 text-white' : 'text-slate-600'
+                  }`}
+                >
+                  Euskara
+                </button>
+              </div>
+            </div>
+
             <button
               onClick={() => handleNavClick('inicio')}
               className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2.5 ${
@@ -163,7 +227,7 @@ function MainAppContent() {
               }`}
             >
               <Home className="w-4 h-4" />
-              <span>Inicio</span>
+              <span>{t.nav.home}</span>
             </button>
             <button
               onClick={() => handleNavClick('noticias')}
@@ -172,7 +236,7 @@ function MainAppContent() {
               }`}
             >
               <Newspaper className="w-4 h-4" />
-              <span>Noticias y Novedades</span>
+              <span>{t.nav.news}</span>
             </button>
             <button
               onClick={() => handleNavClick('equipos')}
@@ -181,7 +245,7 @@ function MainAppContent() {
               }`}
             >
               <Users className="w-4 h-4" />
-              <span>Equipos y Categorías (Especial Femenino)</span>
+              <span>{t.nav.teamsMobile}</span>
             </button>
             <button
               onClick={() => handleNavClick('contacto')}
@@ -190,7 +254,7 @@ function MainAppContent() {
               }`}
             >
               <Mail className="w-4 h-4" />
-              <span>Contacto y Localización</span>
+              <span>{t.nav.contactMobile}</span>
             </button>
             <button
               onClick={() => handleNavClick('seccion')}
@@ -200,10 +264,12 @@ function MainAppContent() {
             >
               <div className="flex items-center gap-2.5">
                 {isUnlocked ? <Unlock className="w-4 h-4 text-emerald-300" /> : <Lock className="w-4 h-4 text-amber-400" />}
-                <span>Área Privada de Sección (Contraseña + Drive)</span>
+                <span>{t.nav.sectionMobile}</span>
               </div>
               <span className="text-[10px] bg-white/15 px-2 py-0.5 rounded font-mono">Drive</span>
             </button>
+
+            <PWAInstallButton variant="mobile" />
           </div>
         )}
       </header>
@@ -213,27 +279,26 @@ function MainAppContent() {
         {/* TAB 1: INICIO */}
         {activeTab === 'inicio' && (
           <div className="space-y-16">
-            {/* HERO SPLIT SHOWCASE: Clean white layout with emerald, navy & amber accents and real Senior Femenino photo */}
+            {/* 1. PRESENTACIÓN (HERO SPLIT SHOWCASE) */}
             <div className="rounded-3xl sm:rounded-[36px] border border-slate-200 bg-slate-50/70 overflow-hidden shadow-sm">
               <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
                 {/* Left Copy */}
                 <div className="lg:col-span-6 p-7 sm:p-12 space-y-6">
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-blue-950 text-xs font-bold tracking-wide uppercase shadow-2xs">
                     <Shield className="w-3.5 h-3.5 text-emerald-700" />
-                    <span>Agrupación Deportiva San Juan • Pamplona</span>
+                    <span>{t.hero.badge}</span>
                   </div>
 
                   <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight leading-[1.08] font-display">
-                    SECCIÓN DE <br />
-                    <span className="text-emerald-700">BALONMANO</span>{' '}
-                    <span className="text-blue-950">ADSJ</span>
+                    {t.hero.titleLine1} <br />
+                    <span className="text-emerald-700">{t.hero.titleWord2}</span>{' '}
+                    <span className="text-blue-950">{t.hero.titleWord3}</span>
                   </h1>
 
                   <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl">
-                    Portal oficial de la sección de balonmano de la AD San Juan (Donibane). Pasión, formación y un proyecto referente en balonmano femenino y deporte base navarro.
+                    {t.hero.description}
                   </p>
 
-                  {/* Club tri-color accent line (Emerald + Navy + Gold) */}
                   <div className="flex items-center gap-1.5 h-1.5 w-36 rounded-full overflow-hidden">
                     <div className="flex-1 h-full bg-emerald-700" />
                     <div className="flex-1 h-full bg-blue-950" />
@@ -246,7 +311,7 @@ function MainAppContent() {
                       className="px-6 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm rounded-2xl shadow-md flex items-center gap-2 cursor-pointer transition-all hover:scale-[1.02]"
                     >
                       <Newspaper className="w-4 h-4" />
-                      <span>Ver Noticias y Crónicas</span>
+                      <span>{t.hero.ctaNews}</span>
                     </button>
 
                     <button
@@ -254,14 +319,14 @@ function MainAppContent() {
                       className="px-6 py-3.5 bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs sm:text-sm rounded-2xl shadow-sm flex items-center gap-2 cursor-pointer transition-all"
                     >
                       <Users className="w-4 h-4 text-emerald-300" />
-                      <span>Equipos y Plantillas</span>
+                      <span>{t.hero.ctaTeams}</span>
                     </button>
 
                     <button
                       onClick={() => handleNavClick('contacto')}
                       className="px-4 py-3 text-slate-700 hover:text-emerald-700 font-bold text-xs transition-colors flex items-center gap-1 cursor-pointer"
                     >
-                      <span>Quiero Jugar en San Juan</span>
+                      <span>{t.hero.ctaJoin}</span>
                       <ChevronRight className="w-4 h-4" />
                     </button>
                   </div>
@@ -272,7 +337,7 @@ function MainAppContent() {
                   <div className="relative rounded-3xl overflow-hidden border border-slate-200 shadow-lg bg-white">
                     <img
                       src={handballImages.seniorFemeninoReal}
-                      alt="Equipo Senior Femenino actual de la AD San Juan Balonmano"
+                      alt={t.hero.photoCaption}
                       className="w-full h-72 sm:h-96 lg:h-[420px] object-cover object-center"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
@@ -280,10 +345,10 @@ function MainAppContent() {
                       <div>
                         <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider bg-emerald-700 px-2.5 py-1 rounded-full mb-1.5">
                           <Camera className="w-3 h-3" />
-                          Senior Femenino Actual
+                          {t.hero.photoBadge}
                         </span>
                         <p className="text-sm sm:text-base font-bold leading-snug">
-                          Nuestro primer equipo femenino en el Polideportivo San Juan
+                          {t.hero.photoCaption}
                         </p>
                       </div>
                     </div>
@@ -292,13 +357,46 @@ function MainAppContent() {
               </div>
             </div>
 
-            {/* STATS STRIP */}
+            {/* 2. NOTICIAS Y NOVEDADES JUSTO DEBAJO DE LA PRESENTACIÓN */}
+            <section aria-label={t.news.title}>
+              <NewsSection />
+            </section>
+
+            {/* 3. STATS STRIP (7 equipos federados y ~100 jugadores y jugadoras) */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { number: '6', label: 'Equipos Federados', desc: 'Cantera y Senior Femenino', icon: Trophy, color: 'text-emerald-700', bg: 'bg-emerald-50' },
-                { number: '+110', label: 'Jugadoras y Jugadores', desc: 'Compitiendo en Navarra', icon: Users, color: 'text-blue-950', bg: 'bg-blue-50' },
-                { number: '14', label: 'Técnicos Titulados', desc: 'Formación y valores', icon: Award, color: 'text-amber-600', bg: 'bg-amber-50' },
-                { number: '100%', label: 'Sentimiento Verde', desc: 'Pabellón Polideportivo', icon: Flame, color: 'text-emerald-700', bg: 'bg-emerald-50' },
+                {
+                  number: t.stats.teamsNum,
+                  label: t.stats.teamsLabel,
+                  desc: t.stats.teamsDesc,
+                  icon: Trophy,
+                  color: 'text-emerald-700',
+                  bg: 'bg-emerald-50',
+                },
+                {
+                  number: t.stats.playersNum,
+                  label: t.stats.playersLabel,
+                  desc: t.stats.playersDesc,
+                  icon: Users,
+                  color: 'text-blue-950',
+                  bg: 'bg-blue-50',
+                },
+                {
+                  number: t.stats.coachesNum,
+                  label: t.stats.coachesLabel,
+                  desc: t.stats.coachesDesc,
+                  icon: Award,
+                  color: 'text-amber-600',
+                  bg: 'bg-amber-50',
+                },
+                {
+                  number: t.stats.spiritNum,
+                  label: t.stats.spiritLabel,
+                  desc: t.stats.spiritDesc,
+                  icon: Flame,
+                  color: 'text-emerald-700',
+                  bg: 'bg-emerald-50',
+                },
               ].map((stat, idx) => (
                 <div
                   key={idx}
@@ -317,9 +415,8 @@ function MainAppContent() {
               ))}
             </div>
 
-            {/* THREE FEATURED HUB HIGHLIGHTS */}
+            {/* 4. THREE FEATURED HUB HIGHLIGHTS */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Highlight 1: Noticias y Crónicas */}
               <div
                 onClick={() => handleNavClick('noticias')}
                 className="bg-white border border-slate-200 hover:border-emerald-600 rounded-3xl p-6 transition-all duration-300 shadow-xs hover:shadow-xl cursor-pointer group flex flex-col justify-between"
@@ -329,22 +426,19 @@ function MainAppContent() {
                     <Newspaper className="w-6 h-6" />
                   </div>
                   <span className="text-[11px] font-bold text-blue-900 uppercase tracking-wider">
-                    Actualidad
+                    {t.highlights.newsTag}
                   </span>
                   <h3 className="text-xl font-bold text-slate-900 font-display mt-1">
-                    Noticias y Novedades
+                    {t.highlights.newsTitle}
                   </h3>
-                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                    Crónicas de partidos, resultados de fin de semana, avisos de entrenamientos y convocatorias de la Federación Navarra.
-                  </p>
+                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">{t.highlights.newsDesc}</p>
                 </div>
                 <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-700">
-                  <span>Explorar artículos</span>
+                  <span>{t.highlights.newsCta}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
 
-              {/* Highlight 2: Equipos & Balonmano Femenino */}
               <div
                 onClick={() => handleNavClick('equipos')}
                 className="bg-white border border-slate-200 hover:border-emerald-600 rounded-3xl p-6 transition-all duration-300 shadow-xs hover:shadow-xl cursor-pointer group flex flex-col justify-between"
@@ -354,22 +448,19 @@ function MainAppContent() {
                     <Users className="w-6 h-6" />
                   </div>
                   <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">
-                    Especial Chicas
+                    {t.highlights.teamsTag}
                   </span>
                   <h3 className="text-xl font-bold text-slate-900 font-display mt-1">
-                    Equipos y Plantillas
+                    {t.highlights.teamsTitle}
                   </h3>
-                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                    Conoce a nuestras jugadoras de Senior Femenino, Juveniles, Cadetes, Infantiles y Escuela de Iniciación con sus dorsales y cuerpo técnico.
-                  </p>
+                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">{t.highlights.teamsDesc}</p>
                 </div>
                 <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-700">
-                  <span>Ver alineaciones</span>
+                  <span>{t.highlights.teamsCta}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
 
-              {/* Highlight 3: Área Privada Sección */}
               <div
                 onClick={() => handleNavClick('seccion')}
                 className="bg-blue-950 text-white border border-blue-900 hover:border-emerald-500 rounded-3xl p-6 transition-all duration-300 shadow-md hover:shadow-xl cursor-pointer group flex flex-col justify-between"
@@ -380,38 +471,38 @@ function MainAppContent() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] font-bold text-emerald-300 uppercase tracking-wider">
-                      Protegido por Clave
+                      {t.highlights.sectionTag}
                     </span>
                     <span className="text-[10px] bg-white/15 text-white px-1.5 py-0.2 rounded font-mono">
                       Google Drive
                     </span>
                   </div>
                   <h3 className="text-xl font-bold text-white font-display mt-1">
-                    Área de la Sección
+                    {t.highlights.sectionTitle}
                   </h3>
-                  <p className="text-xs text-blue-100/90 mt-2 leading-relaxed">
-                    Acceso exclusivo para técnicos y jugadoras: actas de mesa, autorizaciones, cuadrante de pistas y archivos de Drive sincronizados.
-                  </p>
+                  <p className="text-xs text-blue-100/90 mt-2 leading-relaxed">{t.highlights.sectionDesc}</p>
                 </div>
                 <div className="mt-6 pt-4 border-t border-blue-900 flex items-center justify-between text-xs font-bold text-emerald-300">
-                  <span>{isUnlocked ? 'Acceder a tus archivos' : 'Desbloquear con clave'}</span>
+                  <span>{isUnlocked ? t.highlights.sectionCtaUnlocked : t.highlights.sectionCtaLocked}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </div>
 
-            {/* GALERÍA DE BALONMANO FEMENINO */}
+            {/* 5. GALERÍA DE BALONMANO FEMENINO */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">Nuestra Identidad</span>
-                  <h3 className="text-2xl font-extrabold text-slate-900 font-display">Balonmano Femenino y Cantera</h3>
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+                    {t.gallery.tag}
+                  </span>
+                  <h3 className="text-2xl font-extrabold text-slate-900 font-display">{t.gallery.title}</h3>
                 </div>
                 <button
                   onClick={() => handleNavClick('equipos')}
                   className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 cursor-pointer"
                 >
-                  <span>Ver todos los equipos</span>
+                  <span>{t.gallery.viewAll}</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
@@ -421,13 +512,13 @@ function MainAppContent() {
                   <div className="h-52 overflow-hidden">
                     <img
                       src={handballImages.hero}
-                      alt="Lanzamiento en suspensión balonmano femenino"
+                      alt={t.gallery.card1Title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
                   <div className="p-4">
-                    <h4 className="font-bold text-slate-900 text-sm">Intensidad en cada partido</h4>
-                    <p className="text-xs text-slate-500 mt-1">Competitividad y juego rápido en todas nuestras categorías.</p>
+                    <h4 className="font-bold text-slate-900 text-sm">{t.gallery.card1Title}</h4>
+                    <p className="text-xs text-slate-500 mt-1">{t.gallery.card1Desc}</p>
                   </div>
                 </div>
 
@@ -435,13 +526,13 @@ function MainAppContent() {
                   <div className="h-52 overflow-hidden">
                     <img
                       src={handballImages.teamAction}
-                      alt="Celebración equipo femenino de balonmano"
+                      alt={t.gallery.card2Title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
                   <div className="p-4">
-                    <h4 className="font-bold text-slate-900 text-sm">Compañerismo en la pista</h4>
-                    <p className="text-xs text-slate-500 mt-1">Cantera unida desde la escuela hasta categoría juvenil.</p>
+                    <h4 className="font-bold text-slate-900 text-sm">{t.gallery.card2Title}</h4>
+                    <p className="text-xs text-slate-500 mt-1">{t.gallery.card2Desc}</p>
                   </div>
                 </div>
 
@@ -449,40 +540,38 @@ function MainAppContent() {
                   <div className="h-52 overflow-hidden">
                     <img
                       src={handballImages.tactics}
-                      alt="Pizarra táctica y dirección técnica"
+                      alt={t.gallery.card3Title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
                   <div className="p-4">
-                    <h4 className="font-bold text-slate-900 text-sm">Dirección Técnica Titulada</h4>
-                    <p className="text-xs text-slate-500 mt-1">Planificación táctica y formación continua para nuestras jugadoras.</p>
+                    <h4 className="font-bold text-slate-900 text-sm">{t.gallery.card3Title}</h4>
+                    <p className="text-xs text-slate-500 mt-1">{t.gallery.card3Desc}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* INSTALACIONES Y PABELLÓN */}
+            {/* 6. INSTALACIONES Y PABELLÓN */}
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="space-y-4 max-w-xl">
                 <div className="flex items-center gap-2 text-blue-900 text-xs font-bold uppercase tracking-wider">
                   <MapPin className="w-4 h-4 text-emerald-700" />
-                  <span>Instalaciones AD San Juan • Donibane</span>
+                  <span>{t.facilities.tag}</span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display">
-                  Pabellón Polideportivo San Juan
+                  {t.facilities.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Contamos con pista reglamentaria de balonmano de 40x20 metros con graderío para más de 400 espectadores, sala polivalente de preparación física, vestuarios adaptados y pistas exteriores en el complejo deportivo de la Agrupación en el barrio de San Juan.
-                </p>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{t.facilities.desc}</p>
                 <div className="flex flex-wrap gap-2 pt-2 text-xs text-slate-700 font-medium">
                   <span className="px-3 py-1 bg-white rounded-lg border border-slate-200">
-                    Pista 1 Interior
+                    {t.facilities.court1}
                   </span>
                   <span className="px-3 py-1 bg-white rounded-lg border border-slate-200">
-                    Pista 2 Interior
+                    {t.facilities.court2}
                   </span>
                   <span className="px-3 py-1 bg-white rounded-lg border border-slate-200">
-                    Pista Verde Exterior
+                    {t.facilities.court3}
                   </span>
                 </div>
               </div>
@@ -492,7 +581,7 @@ function MainAppContent() {
                   onClick={() => handleNavClick('contacto')}
                   className="px-6 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer text-center"
                 >
-                  Contactar con la Sección
+                  {t.facilities.cta}
                 </button>
               </div>
             </div>
@@ -524,75 +613,74 @@ function MainAppContent() {
       <footer className="bg-slate-50 border-t border-slate-200 mt-20 text-slate-600 text-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
-            {/* Col 1 */}
             <div className="space-y-4 md:col-span-1">
               <ClubLogo size="md" />
-              <p className="text-slate-600 text-xs leading-relaxed">
-                Agrupación Deportiva San Juan / Donibane Kirol Elkartea. Fomentando el deporte, los valores y el balonmano en Pamplona desde su fundación.
-              </p>
+              <p className="text-slate-600 text-xs leading-relaxed">{t.footer.about}</p>
+              <PWAInstallButton variant="footer" />
             </div>
 
-            {/* Col 2 */}
             <div className="space-y-3">
-              <h4 className="font-bold text-slate-900 uppercase text-xs tracking-wider">Secciones y Enlaces</h4>
+              <h4 className="font-bold text-slate-900 uppercase text-xs tracking-wider">
+                {t.footer.linksTitle}
+              </h4>
               <ul className="space-y-2 text-slate-600">
                 <li>
                   <button onClick={() => handleNavClick('inicio')} className="hover:text-emerald-700 cursor-pointer">
-                    Inicio
+                    {t.footer.linkHome}
                   </button>
                 </li>
                 <li>
                   <button onClick={() => handleNavClick('noticias')} className="hover:text-emerald-700 cursor-pointer">
-                    Noticias y Novedades
+                    {t.footer.linkNews}
                   </button>
                 </li>
                 <li>
                   <button onClick={() => handleNavClick('equipos')} className="hover:text-emerald-700 cursor-pointer">
-                    Equipos y Jugadoras
+                    {t.footer.linkTeams}
                   </button>
                 </li>
                 <li>
                   <button onClick={() => handleNavClick('seccion')} className="hover:text-emerald-700 cursor-pointer">
-                    Área Protegida de Sección (Drive)
+                    {t.footer.linkSection}
                   </button>
                 </li>
                 <li>
                   <button onClick={() => handleNavClick('contacto')} className="hover:text-emerald-700 cursor-pointer">
-                    Contacto e Inscripciones
+                    {t.footer.linkContact}
                   </button>
                 </li>
               </ul>
             </div>
 
-            {/* Col 3 */}
             <div className="space-y-3">
-              <h4 className="font-bold text-slate-900 uppercase text-xs tracking-wider">Contacto de Sección</h4>
+              <h4 className="font-bold text-slate-900 uppercase text-xs tracking-wider">
+                {t.footer.contactTitle}
+              </h4>
               <p className="text-emerald-700 font-mono font-semibold text-xs">balonmano.adsj@gmail.com</p>
-              <p>Polideportivo AD San Juan</p>
-              <p>C/ Virgen del Puy 1, 31011 Pamplona (Navarra)</p>
-              <p className="text-slate-500">Teléfono ADSJ: 948 17 22 55</p>
+              <p>{t.footer.address1}</p>
+              <p>{t.footer.address2}</p>
+              <p className="text-slate-500">{t.footer.phone}</p>
             </div>
 
-            {/* Col 4 */}
             <div className="space-y-3">
-              <h4 className="font-bold text-slate-900 uppercase text-xs tracking-wider">Seguridad y Acceso</h4>
-              <p className="text-slate-600 text-xs">
-                El acceso a actas, cuadrantes y Google Drive está restringido a miembros acreditados de la sección con contraseña.
-              </p>
+              <h4 className="font-bold text-slate-900 uppercase text-xs tracking-wider">
+                {t.footer.securityTitle}
+              </h4>
+              <p className="text-slate-600 text-xs">{t.footer.securityDesc}</p>
               <div className="pt-1">
                 {isUnlocked ? (
                   <button
                     onClick={lockSection}
                     className="px-3 py-1.5 bg-white border border-amber-300 text-amber-800 font-semibold rounded-lg text-xs hover:bg-amber-50 cursor-pointer"
                   >
-                    Cerrar sesión de sección
+                    {t.footer.lockSession}
                   </button>
                 ) : (
                   <button
                     onClick={() => handleNavClick('seccion')}
                     className="px-3 py-1.5 bg-blue-950 text-white font-semibold rounded-lg text-xs hover:bg-blue-900 cursor-pointer"
                   >
-                    Desbloquear Sección
+                    {t.footer.unlockSection}
                   </button>
                 )}
               </div>
@@ -601,24 +689,28 @@ function MainAppContent() {
 
           <div className="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
             <div>
-              © {new Date().getFullYear()} AD San Juan Balonmano • Donibane Eskubaloia. Todos los derechos reservados.
+              © {new Date().getFullYear()} {t.footer.copyright}
             </div>
             <div className="flex items-center gap-4">
-              <span>Federación Navarra de Balonmano (FNBM)</span>
+              <span>{t.common.fnbm}</span>
               <span>•</span>
-              <span>Pamplona / Iruña</span>
+              <span>{t.common.pamplona}</span>
             </div>
           </div>
         </div>
       </footer>
+
+      <OfflineIndicator />
     </div>
   );
 }
 
 export default function App() {
   return (
-    <SectionAuthProvider>
-      <MainAppContent />
-    </SectionAuthProvider>
+    <LanguageProvider>
+      <SectionAuthProvider>
+        <MainAppContent />
+      </SectionAuthProvider>
+    </LanguageProvider>
   );
 }

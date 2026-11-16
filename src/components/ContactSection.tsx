@@ -8,14 +8,24 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { ClubLogo } from './ClubLogo';
+import { useLanguage } from '../context/LanguageContext';
 
 export const ContactSection: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const { t } = useLanguage();
+
+  const [formData, setFormData] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    category: string;
+    subject: string;
+    message: string;
+  }>({
     name: '',
     email: '',
     phone: '',
-    category: 'Senior Femenino',
-    subject: 'Inscripción / Pruebas',
+    category: t.contact.categories[0],
+    subject: t.contact.subjects[0],
     message: '',
   });
 
@@ -38,14 +48,12 @@ export const ContactSection: React.FC = () => {
       <div className="text-left space-y-2 pb-5 border-b border-slate-200">
         <div className="flex items-center gap-2 text-emerald-700 text-xs font-bold uppercase tracking-wider">
           <Mail className="w-4 h-4" />
-          <span>Atención a Familias y Deportistas</span>
+          <span>{t.contact.tag}</span>
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight font-display">
-          Contacto y Localización
+          {t.contact.title}
         </h2>
-        <p className="text-sm text-slate-600 max-w-2xl">
-          ¿Quieres jugar en nuestros equipos, probar en la escuela de balonmano o necesitas información? Estamos a tu disposición.
-        </p>
+        <p className="text-sm text-slate-600 max-w-2xl">{t.contact.subtitle}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -57,68 +65,54 @@ export const ContactSection: React.FC = () => {
             </div>
 
             <div className="space-y-3.5 text-xs text-slate-700 pt-2">
-              {/* Email */}
               <div className="p-4 bg-white rounded-2xl border border-slate-200 flex items-start gap-3.5 shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-700 border border-emerald-200 shrink-0">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] text-slate-500 font-semibold uppercase">Email Oficial de la Sección</div>
+                  <div className="text-[11px] text-slate-500 font-semibold uppercase">{t.contact.emailLabel}</div>
                   <a
                     href="mailto:balonmano.adsj@gmail.com"
                     className="font-bold text-slate-900 hover:text-emerald-700 text-sm break-all transition-colors"
                   >
                     balonmano.adsj@gmail.com
                   </a>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    Respuesta habitual en menos de 24 horas laborables.
-                  </p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">{t.contact.emailNote}</p>
                 </div>
               </div>
 
-              {/* Teléfono */}
               <div className="p-4 bg-white rounded-2xl border border-slate-200 flex items-start gap-3.5 shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-900 border border-blue-200 shrink-0">
                   <Phone className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] text-slate-500 font-semibold uppercase">Oficinas AD San Juan</div>
+                  <div className="text-[11px] text-slate-500 font-semibold uppercase">{t.contact.phoneLabel}</div>
                   <a href="tel:948172255" className="font-bold text-slate-900 hover:text-emerald-700 text-sm transition-colors">
                     (+34) 948 17 22 55
                   </a>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    Centralita general de la Agrupación Deportiva San Juan.
-                  </p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">{t.contact.phoneNote}</p>
                 </div>
               </div>
 
-              {/* Dirección */}
               <div className="p-4 bg-white rounded-2xl border border-slate-200 flex items-start gap-3.5 shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-700 border border-amber-200 shrink-0">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] text-slate-500 font-semibold uppercase">Instalaciones Deportivas</div>
-                  <div className="font-bold text-slate-900 text-sm">Polideportivo AD San Juan</div>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    C/ Virgen del Puy, 1 • 31011 Pamplona / Iruña (Navarra)
-                  </p>
+                  <div className="text-[11px] text-slate-500 font-semibold uppercase">{t.contact.addressLabel}</div>
+                  <div className="font-bold text-slate-900 text-sm">{t.contact.addressTitle}</div>
+                  <p className="text-[11px] text-slate-500 mt-0.5">{t.contact.addressDetail}</p>
                 </div>
               </div>
 
-              {/* Horarios */}
               <div className="p-4 bg-white rounded-2xl border border-slate-200 flex items-start gap-3.5 shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-700 border border-emerald-200 shrink-0">
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] text-slate-500 font-semibold uppercase">Horario de Entrenamientos y Pabellón</div>
-                  <p className="text-slate-900 font-semibold text-xs mt-0.5">
-                    Lunes a Viernes: 16:30 a 22:30 h
-                  </p>
-                  <p className="text-slate-500 text-[11px]">
-                    Sábados y Domingos: Competiciones oficiales según calendario FNBM.
-                  </p>
+                  <div className="text-[11px] text-slate-500 font-semibold uppercase">{t.contact.hoursLabel}</div>
+                  <p className="text-slate-900 font-semibold text-xs mt-0.5">{t.contact.hoursWeek}</p>
+                  <p className="text-slate-500 text-[11px]">{t.contact.hoursWeekend}</p>
                 </div>
               </div>
             </div>
@@ -133,11 +127,10 @@ export const ContactSection: React.FC = () => {
                 <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto text-emerald-700">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 font-display">
-                  ¡Mensaje Recibido Correctamente!
-                </h3>
+                <h3 className="text-2xl font-bold text-slate-900 font-display">{t.contact.successTitle}</h3>
                 <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                  Gracias por ponerte en contacto con la sección de balonmano de la AD San Juan. Nos pondremos en contacto contigo a través de <strong className="text-emerald-700">{formData.email}</strong> a la mayor brevedad.
+                  {t.contact.successDesc1} <strong className="text-emerald-700">{formData.email}</strong>{' '}
+                  {t.contact.successDesc2}
                 </p>
                 <div className="pt-4">
                   <button
@@ -147,14 +140,14 @@ export const ContactSection: React.FC = () => {
                         name: '',
                         email: '',
                         phone: '',
-                        category: 'Senior Femenino',
-                        subject: 'Inscripción / Pruebas',
+                        category: t.contact.categories[0],
+                        subject: t.contact.subjects[0],
                         message: '',
                       });
                     }}
                     className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl cursor-pointer transition-colors"
                   >
-                    Enviar otro mensaje
+                    {t.contact.sendAnother}
                   </button>
                 </div>
               </div>
@@ -162,37 +155,35 @@ export const ContactSection: React.FC = () => {
               <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                 <div>
                   <span className="text-emerald-700 text-xs font-bold uppercase tracking-wider">
-                    Formulario de Contacto
+                    {t.contact.formTag}
                   </span>
                   <h3 className="text-xl sm:text-2xl font-bold text-slate-900 font-display mt-1">
-                    Escribe a la Sección de Balonmano
+                    {t.contact.formTitle}
                   </h3>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Rellena este formulario para consultas de altas, pruebas para jugadoras o cualquier duda.
-                  </p>
+                  <p className="text-xs text-slate-500 mt-1">{t.contact.formSubtitle}</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <div>
-                    <label className="block text-slate-700 font-semibold mb-1">Nombre y Apellidos *</label>
+                    <label className="block text-slate-700 font-semibold mb-1">{t.contact.nameLabel}</label>
                     <input
                       type="text"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Ej: Amaia Martínez"
+                      placeholder={t.contact.namePlaceholder}
                       className="w-full bg-slate-50 border border-slate-200 focus:border-emerald-600 rounded-xl px-4 py-2.5 text-slate-900 outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-slate-700 font-semibold mb-1">Correo Electrónico *</label>
+                    <label className="block text-slate-700 font-semibold mb-1">{t.contact.emailInputLabel}</label>
                     <input
                       type="email"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="tu-email@ejemplo.com"
+                      placeholder={t.contact.emailPlaceholder}
                       className="w-full bg-slate-50 border border-slate-200 focus:border-emerald-600 rounded-xl px-4 py-2.5 text-slate-900 outline-none"
                     />
                   </div>
@@ -200,7 +191,7 @@ export const ContactSection: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-slate-700 font-semibold mb-1">Teléfono de Contacto</label>
+                    <label className="block text-slate-700 font-semibold mb-1">{t.contact.phoneInputLabel}</label>
                     <input
                       type="tel"
                       value={formData.phone}
@@ -211,46 +202,44 @@ export const ContactSection: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-slate-700 font-semibold mb-1">Categoría de Interés</label>
+                    <label className="block text-slate-700 font-semibold mb-1">{t.contact.categoryLabel}</label>
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       className="w-full bg-slate-50 border border-slate-200 focus:border-emerald-600 rounded-xl px-4 py-2.5 text-slate-900 outline-none"
                     >
-                      <option value="Senior Femenino">Senior Femenino</option>
-                      <option value="Juvenil Femenino">Juvenil Femenino</option>
-                      <option value="Cadete Femenino">Cadete Femenino</option>
-                      <option value="Infantil Femenino">Infantil Femenino</option>
-                      <option value="Escuela Donibane">Escuela de Iniciación Donibane</option>
-                      <option value="Senior Masculino">Senior Masculino</option>
-                      <option value="Otro">Otra consulta</option>
+                      {t.contact.categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Motivo / Asunto</label>
+                  <label className="block text-slate-700 font-semibold mb-1">{t.contact.subjectLabel}</label>
                   <select
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     className="w-full bg-slate-50 border border-slate-200 focus:border-emerald-600 rounded-xl px-4 py-2.5 text-slate-900 outline-none"
                   >
-                    <option value="Inscripción / Pruebas">Pruebas de incorporación para la temporada</option>
-                    <option value="Información Escuela">Información sobre la Escuela de Balonmano</option>
-                    <option value="Partidos y Torneos">Consulta sobre partidos o torneos</option>
-                    <option value="Patrocinio y Donaciones">Patrocinio o colaboración comercial</option>
-                    <option value="Otro">Otro motivo</option>
+                    {t.contact.subjects.map((sub) => (
+                      <option key={sub} value={sub}>
+                        {sub}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Mensaje o Consulta *</label>
+                  <label className="block text-slate-700 font-semibold mb-1">{t.contact.messageLabel}</label>
                   <textarea
                     rows={4}
                     required
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Cuéntanos tu edad, experiencia previa o cualquier duda que tengas..."
+                    placeholder={t.contact.messagePlaceholder}
                     className="w-full bg-slate-50 border border-slate-200 focus:border-emerald-600 rounded-xl px-4 py-2.5 text-slate-900 outline-none resize-none"
                   />
                 </div>
@@ -262,7 +251,7 @@ export const ContactSection: React.FC = () => {
                     className="w-full py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
-                    <span>{isSending ? 'Enviando...' : 'Enviar Consulta a la Sección'}</span>
+                    <span>{isSending ? t.contact.sending : t.contact.submitBtn}</span>
                   </button>
                 </div>
               </form>

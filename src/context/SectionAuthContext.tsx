@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 interface SectionAuthContextType {
   isUnlocked: boolean;
@@ -6,7 +6,7 @@ interface SectionAuthContextType {
   lockSection: () => void;
   currentPasswordHint: string;
   changeSectionPassword: (oldPass: string, newPass: string) => boolean;
-  authError: string | null;
+  authError: boolean;
   clearAuthError: () => void;
 }
 
@@ -20,9 +20,8 @@ export const SectionAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
     return sessionStorage.getItem(STORAGE_KEY_AUTH) === 'true';
   });
-  const [authError, setAuthError] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<boolean>(false);
 
-  // Check if custom password is set
   const getActivePassword = () => {
     return localStorage.getItem(STORAGE_KEY_PASS) || DEFAULT_PASSWORD;
   };
@@ -31,7 +30,6 @@ export const SectionAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const trimmed = inputPass.trim().toLowerCase();
     const activePass = getActivePassword().toLowerCase();
 
-    // Support default aliases like 'sanjuan', 'donibane', 'adsj' if default
     const isMatch =
       trimmed === activePass ||
       (activePass === DEFAULT_PASSWORD && (trimmed === 'donibane' || trimmed === 'adsj' || trimmed === 'balonmano'));
@@ -39,10 +37,10 @@ export const SectionAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     if (isMatch) {
       setIsUnlocked(true);
       sessionStorage.setItem(STORAGE_KEY_AUTH, 'true');
-      setAuthError(null);
+      setAuthError(false);
       return true;
     } else {
-      setAuthError('Contraseña incorrecta. Consulta con tu entrenador o coordinador de sección.');
+      setAuthError(true);
       return false;
     }
   };
@@ -64,7 +62,7 @@ export const SectionAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return true;
   };
 
-  const clearAuthError = () => setAuthError(null);
+  const clearAuthError = () => setAuthError(false);
 
   return (
     <SectionAuthContext.Provider
