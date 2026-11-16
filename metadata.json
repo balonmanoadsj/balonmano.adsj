@@ -1,0 +1,6 @@
+{
+  "name": "AD San Juan Balonmano - Donibane Eskubaloia",
+  "description": "Portal oficial de la sección de balonmano de la Agrupación Deportiva San Juan de Pamplona: noticias, equipos, contacto y gestión de sección protegida con integración de Google Drive.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
