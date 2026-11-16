@@ -29,7 +29,7 @@ Con una defensa 6:0 muy sólida capitaneada en el centro del 40x20 y rápidas tr
 "El compromiso táctico y el esfuerzo colectivo de todas las jugadoras ha sido ejemplar. Este triunfo nos afianza en los puestos altos de la tabla y premia el trabajo semanal en los entrenamientos", destacó el entrenador al concluir el choque.
 
 ¡Enhorabuena chicas, a seguir soñando en verde!`,
-    image: handballImages.hero,
+    image: handballImages.seniorFemeninoReal,
     readTime: '3 min',
     featured: true,
     tags: ['Senior Femenino', 'Crónica', 'Pabellón San Juan', 'Victoria'],

@@ -25,45 +25,50 @@ export const SectionLockGate: React.FC<{ onSuccess?: () => void }> = ({ onSucces
   };
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center p-4 sm:p-6">
+    <div className="min-h-[65vh] flex items-center justify-center p-4 sm:p-6">
       <div
-        className={`w-full max-w-md bg-neutral-900/90 border border-emerald-900/60 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden transition-all duration-300 ${
-          shake ? 'translate-x-[-8px] animate-wiggle' : ''
+        className={`w-full max-w-md bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden transition-all duration-300 ${
+          shake ? 'translate-x-[-8px]' : ''
         }`}
       >
-        {/* Glow ambient background */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-emerald-600/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Top club tri-color accent bar */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 flex">
+          <div className="flex-1 bg-red-600" />
+          <div className="flex-1 bg-blue-950" />
+          <div className="flex-1 bg-emerald-700" />
+        </div>
 
         {/* Header Icon & Club Logo */}
-        <div className="text-center relative z-10 mb-6">
+        <div className="text-center relative z-10 mb-6 pt-2">
           <div className="inline-flex justify-center mb-4">
             <ClubLogo size="lg" showText={false} />
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-2">
-            <Lock className="w-3.5 h-3.5" />
-            <span>Zona Restringida</span>
+          <div className="block">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-bold uppercase tracking-wider mb-2">
+              <Lock className="w-3.5 h-3.5" />
+              <span>Zona Restringida</span>
+            </span>
           </div>
 
-          <h2 className="text-2xl font-bold text-white tracking-tight font-display">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight font-display">
             Área de la Sección
           </h2>
-          <p className="text-sm text-neutral-400 mt-2">
+          <p className="text-sm text-slate-600 mt-2">
             Espacio protegido para el equipo técnico, jugadoras, delegados y directiva de la{' '}
-            <strong className="text-emerald-300 font-medium">AD San Juan Balonmano</strong>.
+            <strong className="text-emerald-700 font-semibold">AD San Juan Balonmano</strong>.
           </p>
         </div>
 
         {/* Formulario de Contraseña */}
         <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300 mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
               Contraseña de Acceso
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
-                <KeyRound className="w-5 h-5 text-emerald-500" />
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <KeyRound className="w-5 h-5 text-emerald-700" />
               </div>
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -73,13 +78,13 @@ export const SectionLockGate: React.FC<{ onSuccess?: () => void }> = ({ onSucces
                   if (authError) clearAuthError();
                 }}
                 placeholder="Introduce la clave de sección..."
-                className="w-full bg-neutral-950/80 border border-neutral-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 rounded-xl py-3 pl-11 pr-12 text-white placeholder-neutral-500 text-sm outline-none transition-all"
+                className="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 rounded-xl py-3 pl-11 pr-12 text-slate-900 placeholder-slate-400 text-sm outline-none transition-all"
                 autoFocus
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-neutral-400 hover:text-white transition-colors"
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-700 transition-colors"
                 title={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -88,15 +93,15 @@ export const SectionLockGate: React.FC<{ onSuccess?: () => void }> = ({ onSucces
           </div>
 
           {authError && (
-            <div className="p-3 bg-rose-950/60 border border-rose-800/80 rounded-xl flex items-start gap-2.5 text-xs text-rose-200">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+            <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2.5 text-xs text-red-700">
+              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
               <span>{authError}</span>
             </div>
           )}
 
           <button
             type="submit"
-            className="w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-xl shadow-lg shadow-emerald-950/50 hover:shadow-emerald-700/30 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+            className="w-full py-3.5 px-4 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
           >
             <ShieldCheck className="w-5 h-5" />
             <span>Desbloquear y Acceder</span>
@@ -106,30 +111,30 @@ export const SectionLockGate: React.FC<{ onSuccess?: () => void }> = ({ onSucces
             <button
               type="button"
               onClick={() => setShowHint(!showHint)}
-              className="text-xs text-emerald-400/90 hover:text-emerald-300 transition-colors inline-flex items-center gap-1 cursor-pointer"
+              className="text-xs text-emerald-700 hover:text-emerald-800 font-medium transition-colors inline-flex items-center gap-1 cursor-pointer"
             >
               <Info className="w-3.5 h-3.5" />
               <span>{showHint ? 'Ocultar pista' : '¿No recuerdas la contraseña?'}</span>
             </button>
 
             {showHint && (
-              <div className="mt-3 p-3 bg-neutral-950/90 border border-emerald-900/50 rounded-xl text-left text-xs text-neutral-300 space-y-1">
-                <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
+              <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl text-left text-xs text-slate-700 space-y-1">
+                <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Clave predeterminada de la sección:</span>
                 </div>
                 <p>
-                  Usa la palabra <code className="bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded font-mono font-bold">sanjuan</code> o <code className="bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded font-mono font-bold">donibane</code>.
+                  Usa la palabra <code className="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-mono font-bold">sanjuan</code> o <code className="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-mono font-bold">donibane</code>.
                 </p>
-                <p className="text-neutral-400 text-[11px] pt-1">
-                  Una vez dentro, cualquier delegado o técnico autorizado puede cambiarla o sincronizarla en la configuración.
+                <p className="text-slate-500 text-[11px] pt-1">
+                  Una vez dentro, cualquier delegado o técnico autorizado puede cambiarla en la configuración.
                 </p>
               </div>
             )}
           </div>
         </form>
 
-        <div className="mt-6 pt-5 border-t border-neutral-800 text-center text-xs text-neutral-500">
+        <div className="mt-6 pt-5 border-t border-slate-200 text-center text-xs text-slate-500">
           <p>Sección de Balonmano • Agrupación Deportiva San Juan</p>
           <p className="text-[11px] mt-0.5">Pamplona - Iruña (Navarra)</p>
         </div>

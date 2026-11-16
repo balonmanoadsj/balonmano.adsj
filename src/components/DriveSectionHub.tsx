@@ -4,18 +4,13 @@ import {
   Search,
   RefreshCw,
   ExternalLink,
-  ShieldAlert,
   FileText,
   Calendar,
-  Clock,
   Key,
-  Users,
   CheckCircle2,
   HardDrive,
   Filter,
-  Download,
   LogOut,
-  ChevronRight,
   Info,
 } from 'lucide-react';
 import { User } from 'firebase/auth';
@@ -23,7 +18,6 @@ import {
   googleSignIn,
   logoutGoogle,
   initAuth,
-  getAccessToken,
 } from '../services/auth';
 import {
   DriveFileItem,
@@ -74,7 +68,6 @@ export const DriveSectionHub: React.FC = () => {
     setErrorMessage(null);
     try {
       const files = await fetchDriveFiles(accessToken, query);
-      // Combine with club seed templates so the section always has access to standard forms
       const merged = [...files, ...SEED_SECTION_DOCUMENTS.filter((seed) => !files.some((f) => f.name === seed.name))];
       setDriveFiles(merged);
     } catch (err: any) {
@@ -145,20 +138,26 @@ export const DriveSectionHub: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Top Banner with security badge and lock controls */}
-      <div className="bg-gradient-to-r from-emerald-950/80 via-neutral-900 to-emerald-950/80 border border-emerald-800/50 rounded-3xl p-6 sm:p-8 backdrop-blur-xl relative overflow-hidden shadow-2xl">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+      <div className="bg-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-sm">
+        <div className="absolute top-0 left-0 right-0 h-1.5 flex">
+          <div className="flex-1 bg-red-600" />
+          <div className="flex-1 bg-blue-950" />
+          <div className="flex-1 bg-emerald-700" />
+        </div>
+
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10 pt-1">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/40">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
                 <span>Sección Desbloqueada</span>
               </span>
-              <span className="text-neutral-400 text-xs hidden sm:inline">• AD San Juan Balonmano</span>
+              <span className="text-slate-500 text-xs hidden sm:inline">• AD San Juan Balonmano</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-display">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-display">
               Área Privada de la Sección
             </h1>
-            <p className="text-sm text-neutral-300 mt-1 max-w-2xl">
+            <p className="text-sm text-slate-600 mt-1 max-w-2xl">
               Gestión documental con Google Drive, cuadrantes de pabellón y herramientas para técnicos, delegados y jugadoras.
             </p>
           </div>
@@ -166,27 +165,31 @@ export const DriveSectionHub: React.FC = () => {
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={lockSection}
-              className="px-4 py-2 bg-neutral-800/90 hover:bg-neutral-700 text-neutral-200 hover:text-white text-xs font-semibold rounded-xl border border-neutral-700 flex items-center gap-2 transition-all cursor-pointer"
+              className="px-4 py-2 bg-white hover:bg-red-50 text-slate-700 hover:text-red-700 text-xs font-semibold rounded-xl border border-slate-300 flex items-center gap-2 transition-all cursor-pointer shadow-xs"
             >
-              <LogOut className="w-3.5 h-3.5 text-rose-400" />
+              <LogOut className="w-3.5 h-3.5 text-red-600" />
               <span>Bloquear Sección</span>
             </button>
           </div>
         </div>
 
         {/* Sub Navigation inside the Private Area */}
-        <div className="flex items-center gap-2 mt-6 pt-6 border-t border-emerald-900/40 overflow-x-auto pb-1 text-xs">
+        <div className="flex items-center gap-2 mt-6 pt-6 border-t border-slate-200 overflow-x-auto pb-1 text-xs">
           <button
             onClick={() => setActiveSubTab('drive')}
             className={`px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
               activeSubTab === 'drive'
-                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/40'
-                : 'bg-neutral-900/80 text-neutral-400 hover:text-white hover:bg-neutral-800'
+                ? 'bg-emerald-700 text-white shadow-sm'
+                : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
             }`}
           >
             <HardDrive className="w-4 h-4" />
             <span>Documentos Google Drive</span>
-            <span className="bg-emerald-950/80 text-emerald-200 text-[10px] px-1.5 py-0.5 rounded-full font-mono">
+            <span
+              className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
+                activeSubTab === 'drive' ? 'bg-emerald-900 text-white' : 'bg-slate-100 text-slate-600'
+              }`}
+            >
               {filteredFiles.length}
             </span>
           </button>
@@ -195,8 +198,8 @@ export const DriveSectionHub: React.FC = () => {
             onClick={() => setActiveSubTab('cuadrante')}
             className={`px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
               activeSubTab === 'cuadrante'
-                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/40'
-                : 'bg-neutral-900/80 text-neutral-400 hover:text-white hover:bg-neutral-800'
+                ? 'bg-emerald-700 text-white shadow-sm'
+                : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
             }`}
           >
             <Calendar className="w-4 h-4" />
@@ -207,8 +210,8 @@ export const DriveSectionHub: React.FC = () => {
             onClick={() => setActiveSubTab('convocatorias')}
             className={`px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
               activeSubTab === 'convocatorias'
-                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/40'
-                : 'bg-neutral-900/80 text-neutral-400 hover:text-white hover:bg-neutral-800'
+                ? 'bg-emerald-700 text-white shadow-sm'
+                : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
             }`}
           >
             <FileText className="w-4 h-4" />
@@ -219,8 +222,8 @@ export const DriveSectionHub: React.FC = () => {
             onClick={() => setActiveSubTab('ajustes')}
             className={`px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
               activeSubTab === 'ajustes'
-                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/40'
-                : 'bg-neutral-900/80 text-neutral-400 hover:text-white hover:bg-neutral-800'
+                ? 'bg-emerald-700 text-white shadow-sm'
+                : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
             }`}
           >
             <Key className="w-4 h-4" />
@@ -233,25 +236,25 @@ export const DriveSectionHub: React.FC = () => {
       {activeSubTab === 'drive' && (
         <div className="space-y-6">
           {/* Google Account Bar / Sign-In Status */}
-          <div className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-950 flex items-center justify-center text-emerald-400 border border-emerald-800/60 shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-700 border border-emerald-200 shrink-0">
                 <FolderOpen className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-white text-sm">Almacenamiento Google Drive</h3>
+                  <h3 className="font-bold text-slate-900 text-sm">Almacenamiento Google Drive</h3>
                   {user ? (
-                    <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
+                    <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">
                       Conectado
                     </span>
                   ) : (
-                    <span className="bg-neutral-800 text-neutral-400 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                      Modo Club / Offline
+                    <span className="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                      Modo Club / Plantillas
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-neutral-400 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   {user
                     ? `Sesión iniciada como: ${user.email || user.displayName}`
                     : 'Inicia sesión con Google para sincronizar y buscar directamente en las carpetas de Drive del club.'}
@@ -265,7 +268,7 @@ export const DriveSectionHub: React.FC = () => {
                   <button
                     onClick={() => token && loadFilesFromDrive(token, searchQuery)}
                     disabled={isLoadingFiles}
-                    className="p-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 rounded-xl transition-all cursor-pointer disabled:opacity-50"
+                    className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all cursor-pointer disabled:opacity-50"
                     title="Recargar archivos de Drive"
                   >
                     <RefreshCw className={`w-4 h-4 ${isLoadingFiles ? 'animate-spin' : ''}`} />
@@ -274,20 +277,19 @@ export const DriveSectionHub: React.FC = () => {
                     href="https://drive.google.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3.5 py-2 bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 text-xs font-bold rounded-xl border border-emerald-500/40 flex items-center gap-1.5 transition-all"
+                    className="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-200 flex items-center gap-1.5 transition-all"
                   >
                     <span>Ir a Google Drive</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                   <button
                     onClick={handleGoogleLogout}
-                    className="px-3 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold rounded-xl transition-all cursor-pointer"
+                    className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-all cursor-pointer"
                   >
                     Desconectar
                   </button>
                 </div>
               ) : (
-                /* Google Official Sign In Button as instructed in workspace-integration SKILL.md */
                 <button
                   type="button"
                   onClick={handleGoogleLogin}
@@ -332,8 +334,8 @@ export const DriveSectionHub: React.FC = () => {
           </div>
 
           {errorMessage && (
-            <div className="p-3.5 bg-amber-950/40 border border-amber-800/60 rounded-xl text-xs text-amber-200 flex items-center gap-2.5">
-              <Info className="w-4 h-4 text-amber-400 shrink-0" />
+            <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 flex items-center gap-2.5">
+              <Info className="w-4 h-4 text-amber-600 shrink-0" />
               <span>{errorMessage}</span>
             </div>
           )}
@@ -341,18 +343,18 @@ export const DriveSectionHub: React.FC = () => {
           {/* Search & Filters */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar archivos por nombre o tema (ej. acta, plantilla, pista)..."
-                className="w-full bg-neutral-900 border border-neutral-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-neutral-500 outline-none"
+                className="w-full bg-white border border-slate-200 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none"
               />
             </form>
 
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-              <span className="text-neutral-500 text-[11px] font-semibold uppercase mr-1 flex items-center gap-1">
+              <span className="text-slate-500 text-[11px] font-semibold uppercase mr-1 flex items-center gap-1">
                 <Filter className="w-3 h-3" /> Tipo:
               </span>
               {[
@@ -368,8 +370,8 @@ export const DriveSectionHub: React.FC = () => {
                   onClick={() => setActiveCategory(cat.id)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
                     activeCategory === cat.id
-                      ? 'bg-emerald-600/40 text-emerald-300 border border-emerald-500/50'
-                      : 'bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800'
+                      ? 'bg-blue-950 text-white'
+                      : 'bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200'
                   }`}
                 >
                   {cat.label}
@@ -380,15 +382,15 @@ export const DriveSectionHub: React.FC = () => {
 
           {/* Files List / Grid */}
           {isLoadingFiles ? (
-            <div className="py-16 text-center text-neutral-400 space-y-3">
-              <RefreshCw className="w-7 h-7 text-emerald-400 animate-spin mx-auto" />
+            <div className="py-16 text-center text-slate-500 space-y-3">
+              <RefreshCw className="w-7 h-7 text-emerald-700 animate-spin mx-auto" />
               <p className="text-sm">Cargando archivos desde Google Drive...</p>
             </div>
           ) : filteredFiles.length === 0 ? (
-            <div className="py-16 text-center bg-neutral-900/50 border border-neutral-800 rounded-2xl p-8 space-y-3">
-              <FolderOpen className="w-10 h-10 text-neutral-600 mx-auto" />
-              <h4 className="text-white font-bold text-sm">No se encontraron archivos</h4>
-              <p className="text-xs text-neutral-400 max-w-sm mx-auto">
+            <div className="py-16 text-center bg-slate-50 border border-slate-200 rounded-2xl p-8 space-y-3">
+              <FolderOpen className="w-10 h-10 text-slate-400 mx-auto" />
+              <h4 className="text-slate-900 font-bold text-sm">No se encontraron archivos</h4>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto">
                 No hay documentos que coincidan con &quot;{searchQuery}&quot;. Prueba con otro término o limpia los filtros.
               </p>
               <button
@@ -396,7 +398,7 @@ export const DriveSectionHub: React.FC = () => {
                   setSearchQuery('');
                   setActiveCategory('todos');
                 }}
-                className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-xs text-emerald-400 rounded-lg cursor-pointer transition-colors"
+                className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-100 text-xs text-emerald-700 font-semibold rounded-lg cursor-pointer transition-colors"
               >
                 Limpiar búsqueda
               </button>
@@ -408,7 +410,7 @@ export const DriveSectionHub: React.FC = () => {
                 return (
                   <div
                     key={file.id}
-                    className="bg-neutral-900/90 hover:bg-neutral-900 border border-neutral-800 hover:border-emerald-800/80 rounded-2xl p-4 transition-all group flex flex-col justify-between shadow-sm hover:shadow-md"
+                    className="bg-white hover:bg-slate-50/70 border border-slate-200 hover:border-emerald-600/60 rounded-2xl p-4 transition-all group flex flex-col justify-between shadow-xs hover:shadow-md"
                   >
                     <div>
                       <div className="flex items-start justify-between gap-3 mb-3">
@@ -419,26 +421,26 @@ export const DriveSectionHub: React.FC = () => {
                         </span>
 
                         {file.isLocalSeed ? (
-                          <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800/60 px-2 py-0.5 rounded-full font-medium">
+                          <span className="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">
                             Plantilla Oficial
                           </span>
                         ) : (
-                          <span className="text-[10px] bg-neutral-800 text-neutral-400 px-2 py-0.5 rounded-full font-medium">
+                          <span className="text-[10px] bg-blue-50 text-blue-900 border border-blue-200 px-2 py-0.5 rounded-full font-medium">
                             Google Drive
                           </span>
                         )}
                       </div>
 
-                      <h4 className="font-bold text-white text-xs sm:text-sm line-clamp-2 group-hover:text-emerald-300 transition-colors">
+                      <h4 className="font-bold text-slate-900 text-xs sm:text-sm line-clamp-2 group-hover:text-emerald-700 transition-colors">
                         {file.name}
                       </h4>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-neutral-800/80 flex items-center justify-between text-[11px] text-neutral-400">
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
                       <div>
                         <span>{formatFileSize(file.size)}</span>
                         {file.modifiedTime && (
-                          <span className="ml-2 text-neutral-500">
+                          <span className="ml-2 text-slate-400">
                             • {new Date(file.modifiedTime).toLocaleDateString('es-ES')}
                           </span>
                         )}
@@ -448,7 +450,7 @@ export const DriveSectionHub: React.FC = () => {
                         href={file.webViewLink || '#'}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 font-semibold text-emerald-400 hover:text-emerald-300 transition-colors p-1"
+                        className="inline-flex items-center gap-1 font-semibold text-emerald-700 hover:text-emerald-800 transition-colors p-1"
                         title="Abrir documento"
                       >
                         <span>Abrir</span>
@@ -466,25 +468,25 @@ export const DriveSectionHub: React.FC = () => {
       {/* SUB-TAB 2: Cuadrante de Entrenamientos y Pistas */}
       {activeSubTab === 'cuadrante' && (
         <div className="space-y-6">
-          <div className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-6">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h3 className="text-lg font-bold text-white font-display">
+                <h3 className="text-lg font-bold text-slate-900 font-display">
                   Cuadrante Semanal de Pistas • Polideportivo AD San Juan
                 </h3>
-                <p className="text-xs text-neutral-400 mt-1">
+                <p className="text-xs text-slate-500 mt-1">
                   Distribución de horarios de entrenamiento para la sección de balonmano en las instalaciones del club.
                 </p>
               </div>
-              <span className="bg-emerald-950 text-emerald-300 border border-emerald-700/60 text-xs px-3 py-1 rounded-full font-semibold">
-                Temporada 2024 / 2025
+              <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs px-3 py-1 rounded-full font-semibold">
+                Temporada Actual
               </span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-neutral-800 bg-neutral-950/60 text-neutral-300 uppercase tracking-wider font-semibold">
+                  <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase tracking-wider font-semibold">
                     <th className="py-3 px-4">Categoría</th>
                     <th className="py-3 px-4">Días de Entrenamiento</th>
                     <th className="py-3 px-4">Horario</th>
@@ -492,59 +494,59 @@ export const DriveSectionHub: React.FC = () => {
                     <th className="py-3 px-4">Cuerpo Técnico</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-800/60 text-neutral-200">
-                  <tr className="hover:bg-neutral-800/40">
-                    <td className="py-3 px-4 font-bold text-emerald-400">Senior Femenino</td>
+                <tbody className="divide-y divide-slate-100 text-slate-700">
+                  <tr className="hover:bg-slate-50">
+                    <td className="py-3 px-4 font-bold text-emerald-700">Senior Femenino</td>
                     <td className="py-3 px-4">Lunes, Miércoles y Viernes</td>
                     <td className="py-3 px-4 font-mono">20:00 - 21:30</td>
                     <td className="py-3 px-4">Pista Central</td>
-                    <td className="py-3 px-4 text-neutral-400">Mikel Aranguren / Nerea Echeverría</td>
+                    <td className="py-3 px-4 text-slate-500">Mikel Aranguren / Nerea Echeverría</td>
                   </tr>
-                  <tr className="hover:bg-neutral-800/40">
-                    <td className="py-3 px-4 font-bold text-emerald-400">Juvenil Femenino</td>
+                  <tr className="hover:bg-slate-50">
+                    <td className="py-3 px-4 font-bold text-emerald-700">Juvenil Femenino</td>
                     <td className="py-3 px-4">Martes y Jueves</td>
                     <td className="py-3 px-4 font-mono">19:30 - 21:00</td>
                     <td className="py-3 px-4">Pista 1</td>
-                    <td className="py-3 px-4 text-neutral-400">Iñaki Zubeldia / Marta Olcoz</td>
+                    <td className="py-3 px-4 text-slate-500">Iñaki Zubeldia / Marta Olcoz</td>
                   </tr>
-                  <tr className="hover:bg-neutral-800/40">
-                    <td className="py-3 px-4 font-bold text-emerald-400">Cadete Femenino</td>
+                  <tr className="hover:bg-slate-50">
+                    <td className="py-3 px-4 font-bold text-emerald-700">Cadete Femenino</td>
                     <td className="py-3 px-4">Lunes y Miércoles</td>
                     <td className="py-3 px-4 font-mono">18:30 - 20:00</td>
                     <td className="py-3 px-4">Pista 2</td>
-                    <td className="py-3 px-4 text-neutral-400">Javier Azcona / Uxue Iriarte</td>
+                    <td className="py-3 px-4 text-slate-500">Javier Azcona / Uxue Iriarte</td>
                   </tr>
-                  <tr className="hover:bg-neutral-800/40">
-                    <td className="py-3 px-4 font-bold text-emerald-400">Infantil Femenino</td>
+                  <tr className="hover:bg-slate-50">
+                    <td className="py-3 px-4 font-bold text-emerald-700">Infantil Femenino</td>
                     <td className="py-3 px-4">Martes y Jueves</td>
                     <td className="py-3 px-4 font-mono">17:30 - 19:00</td>
                     <td className="py-3 px-4">Pista 2</td>
-                    <td className="py-3 px-4 text-neutral-400">Marta Olcoz / Ane Larrea</td>
+                    <td className="py-3 px-4 text-slate-500">Marta Olcoz / Ane Larrea</td>
                   </tr>
-                  <tr className="hover:bg-neutral-800/40">
-                    <td className="py-3 px-4 font-bold text-emerald-300">Escuela Donibane (Mixto)</td>
+                  <tr className="hover:bg-slate-50">
+                    <td className="py-3 px-4 font-bold text-blue-900">Escuela Donibane (Mixto)</td>
                     <td className="py-3 px-4">Lunes y Miércoles</td>
                     <td className="py-3 px-4 font-mono">17:00 - 18:30</td>
                     <td className="py-3 px-4">Pista Verde Exterior / Polideportivo</td>
-                    <td className="py-3 px-4 text-neutral-400">Amaia Goñi & Monitores Cantera</td>
+                    <td className="py-3 px-4 text-slate-500">Amaia Goñi & Monitores Cantera</td>
                   </tr>
-                  <tr className="hover:bg-neutral-800/40">
-                    <td className="py-3 px-4 font-bold text-neutral-300">Senior Masculino</td>
+                  <tr className="hover:bg-slate-50">
+                    <td className="py-3 px-4 font-bold text-slate-700">Senior Masculino</td>
                     <td className="py-3 px-4">Lunes y Jueves</td>
                     <td className="py-3 px-4 font-mono">21:00 - 22:30</td>
                     <td className="py-3 px-4">Pista Central</td>
-                    <td className="py-3 px-4 text-neutral-400">Asier Urbiola / David Arregui</td>
+                    <td className="py-3 px-4 text-slate-500">Asier Urbiola / David Arregui</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            <div className="mt-6 p-4 bg-emerald-950/30 border border-emerald-800/40 rounded-xl text-xs text-neutral-300 space-y-2">
-              <div className="font-semibold text-emerald-400 flex items-center gap-1.5">
+            <div className="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-slate-700 space-y-2">
+              <div className="font-semibold text-emerald-800 flex items-center gap-1.5">
                 <Info className="w-4 h-4" />
                 <span>Normas de uso de las instalaciones:</span>
               </div>
-              <ul className="list-disc list-inside space-y-1 text-neutral-400">
+              <ul className="list-disc list-inside space-y-1 text-slate-600">
                 <li>Resina balonmano: Permitida exclusivamente resina ecológica al agua autorizada por la ADSJ.</li>
                 <li>Calzado deportivo de suela blanca o sin marcas exclusivo para la pista interior.</li>
                 <li>Puntualidad en los cambios de pista para respetar los horarios de las distintas categorías.</li>
@@ -557,36 +559,36 @@ export const DriveSectionHub: React.FC = () => {
       {/* SUB-TAB 3: Convocatorias y Turnos de Mesa */}
       {activeSubTab === 'convocatorias' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-6 space-y-4">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-xs">
             <div className="flex items-center justify-between">
-              <h3 className="font-bold text-white text-base font-display">Próxima Convocatoria de Partido</h3>
-              <span className="bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+              <h3 className="font-bold text-slate-900 text-base font-display">Próxima Convocatoria de Partido</h3>
+              <span className="bg-emerald-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">
                 Senior Fem
               </span>
             </div>
 
-            <div className="p-4 bg-neutral-950/80 border border-neutral-800 rounded-xl space-y-2 text-xs">
-              <div className="flex justify-between font-bold text-neutral-200">
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs">
+              <div className="flex justify-between font-bold text-slate-800">
                 <span>Partido:</span>
-                <span className="text-emerald-400">AD San Juan vs BM Loyola</span>
+                <span className="text-emerald-700">AD San Juan vs BM Loyola</span>
               </div>
-              <div className="flex justify-between text-neutral-400">
+              <div className="flex justify-between text-slate-600">
                 <span>Fecha y Hora:</span>
                 <span>Sábado, 28 Octubre • 18:30 h</span>
               </div>
-              <div className="flex justify-between text-neutral-400">
+              <div className="flex justify-between text-slate-600">
                 <span>Cita en Vestuarios:</span>
-                <span className="font-mono text-emerald-300">17:15 h (Pabellón San Juan)</span>
+                <span className="font-mono text-blue-950 font-bold">17:15 h (Pabellón San Juan)</span>
               </div>
-              <div className="flex justify-between text-neutral-400">
+              <div className="flex justify-between text-slate-600">
                 <span>Indumentaria:</span>
-                <span>Primera equipación (Verde / Blanco)</span>
+                <span>Primera equipación (Verde / Negro)</span>
               </div>
             </div>
 
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-2">
-                Jugadoras Convocadas (14)
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+                Jugadoras Convocadas (12)
               </h4>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 {[
@@ -603,8 +605,8 @@ export const DriveSectionHub: React.FC = () => {
                   '27. Saioa Barrena',
                   '30. Haizea Elía',
                 ].map((name, i) => (
-                  <div key={i} className="p-2 bg-neutral-950 rounded-lg border border-neutral-800/80 text-neutral-300 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <div key={i} className="p-2 bg-slate-50 rounded-lg border border-slate-200 text-slate-700 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
                     <span className="truncate">{name}</span>
                   </div>
                 ))}
@@ -612,9 +614,9 @@ export const DriveSectionHub: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-6 space-y-4">
-            <h3 className="font-bold text-white text-base font-display">Asignación Mesa y Arbitrajes (Jornada)</h3>
-            <p className="text-xs text-neutral-400">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-xs">
+            <h3 className="font-bold text-slate-900 text-base font-display">Asignación Mesa y Arbitrajes (Jornada)</h3>
+            <p className="text-xs text-slate-500">
               Turnos rotativos de cronometraje y anotación en los partidos que se disputan como local en el pabellón.
             </p>
 
@@ -636,14 +638,14 @@ export const DriveSectionHub: React.FC = () => {
                   cronometrador: 'Mesa asignada por Anaitasuna',
                 },
               ].map((turno, idx) => (
-                <div key={idx} className="p-3.5 bg-neutral-950 rounded-xl border border-neutral-800 text-xs space-y-1.5">
-                  <div className="font-bold text-emerald-400">{turno.match}</div>
-                  <div className="flex justify-between text-neutral-300">
-                    <span className="text-neutral-500">Anotador/a:</span>
+                <div key={idx} className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1.5">
+                  <div className="font-bold text-emerald-700">{turno.match}</div>
+                  <div className="flex justify-between text-slate-700">
+                    <span className="text-slate-500">Anotador/a:</span>
                     <span>{turno.anotador}</span>
                   </div>
-                  <div className="flex justify-between text-neutral-300">
-                    <span className="text-neutral-500">Cronometrador/a:</span>
+                  <div className="flex justify-between text-slate-700">
+                    <span className="text-slate-500">Cronometrador/a:</span>
                     <span>{turno.cronometrador}</span>
                   </div>
                 </div>
@@ -655,20 +657,20 @@ export const DriveSectionHub: React.FC = () => {
 
       {/* SUB-TAB 4: Ajustes de Contraseña */}
       {activeSubTab === 'ajustes' && (
-        <div className="max-w-xl mx-auto bg-neutral-900/80 border border-neutral-800 rounded-2xl p-6 sm:p-8 space-y-6">
+        <div className="max-w-xl mx-auto bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
           <div>
-            <h3 className="text-lg font-bold text-white font-display flex items-center gap-2">
-              <Key className="w-5 h-5 text-emerald-400" />
+            <h3 className="text-lg font-bold text-slate-900 font-display flex items-center gap-2">
+              <Key className="w-5 h-5 text-emerald-700" />
               <span>Modificar Contraseña de la Sección</span>
             </h3>
-            <p className="text-xs text-neutral-400 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               Como técnico o directivo con acceso, puedes actualizar la clave que protege este apartado para toda la sección.
             </p>
           </div>
 
           <form onSubmit={handleChangePassword} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Contraseña Actual (o inicial: sanjuan)
               </label>
               <input
@@ -676,13 +678,13 @@ export const DriveSectionHub: React.FC = () => {
                 value={oldPass}
                 onChange={(e) => setOldPass(e.target.value)}
                 placeholder="Introduce la contraseña actual"
-                className="w-full bg-neutral-950 border border-neutral-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-emerald-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-xs text-slate-900 outline-none focus:border-emerald-600"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Nueva Contraseña de la Sección
               </label>
               <input
@@ -690,7 +692,7 @@ export const DriveSectionHub: React.FC = () => {
                 value={newPass}
                 onChange={(e) => setNewPass(e.target.value)}
                 placeholder="Ejemplo: donibane2025"
-                className="w-full bg-neutral-950 border border-neutral-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-emerald-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-xs text-slate-900 outline-none focus:border-emerald-600"
                 required
               />
             </div>
@@ -699,8 +701,8 @@ export const DriveSectionHub: React.FC = () => {
               <div
                 className={`p-3 rounded-xl text-xs border ${
                   passMessage.ok
-                    ? 'bg-emerald-950/80 border-emerald-700 text-emerald-300'
-                    : 'bg-rose-950/80 border-rose-700 text-rose-300'
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                    : 'bg-red-50 border-red-200 text-red-700'
                 }`}
               >
                 {passMessage.text}
@@ -709,7 +711,7 @@ export const DriveSectionHub: React.FC = () => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-all cursor-pointer shadow-md"
+              className="w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs transition-all cursor-pointer shadow-sm"
             >
               Guardar Nueva Clave
             </button>

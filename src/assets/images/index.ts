@@ -6,4 +6,6 @@ export const handballImages = {
   hero: heroHandballWomen,
   teamAction: handballTeamAction,
   tactics: handballCoachTactics,
+  seniorFemeninoReal: '/assets/aistudio/upsc_f6768ebd.jpeg',
+  clubLogo: '/assets/aistudio/f04177c9-760a-497d-8bdc-dd21b6116441_d0d41fd9.png',
 };
