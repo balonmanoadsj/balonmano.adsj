@@ -6,7 +6,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: '/balonmanoadsj/',
+    base: '/balonmano.adsj/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
