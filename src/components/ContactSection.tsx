@@ -94,7 +94,7 @@ export const ContactSection: React.FC = () => {
 
               {/* Dirección */}
               <div className="p-4 bg-white rounded-2xl border border-slate-200 flex items-start gap-3.5 shadow-xs">
-                <div className="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-600 border border-red-200 shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-700 border border-amber-200 shrink-0">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>

@@ -41,11 +41,11 @@ function MainAppContent() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col selection:bg-emerald-700 selection:text-white">
-      {/* TOP TICKER BAR (Navy Blue & Club Colors accent matching the logo) */}
+      {/* TOP TICKER BAR (Navy Blue & Emerald/Gold Club Colors) */}
       <div className="bg-blue-950 text-white py-1.5 px-4 text-[11px]">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span className="font-semibold">AD San Juan • Donibane Kirol Elkartea</span>
             <span className="text-blue-300/60 hidden sm:inline">•</span>
             <span className="text-blue-100/90 hidden sm:inline">Pabellón Polideportivo de Pamplona</span>
@@ -56,16 +56,19 @@ function MainAppContent() {
               balonmano.adsj@gmail.com
             </span>
             {isUnlocked ? (
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-300 bg-emerald-900/60 px-2 py-0.5 rounded-full border border-emerald-500/40">
+              <button
+                onClick={() => handleNavClick('seccion')}
+                className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-300 bg-emerald-900/60 hover:bg-emerald-800/80 px-2.5 py-0.5 rounded-full border border-emerald-500/40 transition-colors cursor-pointer"
+              >
                 <Unlock className="w-3 h-3" />
                 <span>Sección Activa</span>
-              </span>
+              </button>
             ) : (
               <button
                 onClick={() => handleNavClick('seccion')}
-                className="inline-flex items-center gap-1 text-[11px] text-blue-100 hover:text-white transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1 text-[11px] text-blue-100 hover:text-emerald-300 transition-colors cursor-pointer font-medium"
               >
-                <Lock className="w-3 h-3" />
+                <Lock className="w-3 h-3 text-amber-400" />
                 <span>Acceso Clave Sección</span>
               </button>
             )}
@@ -84,8 +87,8 @@ function MainAppContent() {
             <ClubLogo size="md" />
           </button>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
+          {/* Desktop Navigation (Clean 4 links; Área de la Sección accessed via top bar) */}
+          <nav className="hidden lg:flex items-center gap-1.5">
             <button
               onClick={() => handleNavClick('inicio')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
@@ -120,7 +123,7 @@ function MainAppContent() {
             >
               <Users className="w-4 h-4" />
               <span>Equipos</span>
-              <span className="text-[10px] bg-red-50 text-red-700 border border-red-200 px-1.5 py-0.2 rounded font-bold">
+              <span className="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-200 px-1.5 py-0.2 rounded font-bold">
                 Fem
               </span>
             </button>
@@ -136,48 +139,21 @@ function MainAppContent() {
               <Mail className="w-4 h-4" />
               <span>Contacto</span>
             </button>
-
-            {/* Apartado Privado de la Sección con Contraseña */}
-            <button
-              onClick={() => handleNavClick('seccion')}
-              className={`ml-2 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                activeTab === 'seccion'
-                  ? 'bg-emerald-700 text-white shadow-md border border-emerald-700'
-                  : 'bg-blue-950 hover:bg-blue-900 text-white shadow-sm'
-              }`}
-            >
-              {isUnlocked ? (
-                <Unlock className="w-3.5 h-3.5 text-emerald-300" />
-              ) : (
-                <Lock className="w-3.5 h-3.5 text-red-400" />
-              )}
-              <span>Área de la Sección</span>
-              <span className="text-[10px] bg-white/15 text-white px-1.5 py-0.5 rounded font-mono">
-                Drive
-              </span>
-            </button>
           </nav>
 
-          {/* Mobile menu button */}
-          <div className="flex items-center gap-2 lg:hidden">
-            <button
-              onClick={() => handleNavClick('seccion')}
-              className="p-2 bg-blue-950 text-white rounded-xl text-xs flex items-center gap-1 font-bold"
-            >
-              {isUnlocked ? <Unlock className="w-4 h-4 text-emerald-300" /> : <Lock className="w-4 h-4 text-red-400" />}
-              <span className="text-[11px]">Sección</span>
-            </button>
-
+          {/* Mobile hamburger button */}
+          <div className="flex items-center lg:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2.5 rounded-xl bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-200"
+              aria-label="Abrir menú de navegación"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu */}
+        {/* Mobile Dropdown Menu (Keeps Área Privada de Sección inside hamburger menu) */}
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white border-b border-slate-200 px-4 py-4 space-y-2 shadow-lg">
             <button
@@ -208,18 +184,6 @@ function MainAppContent() {
               <span>Equipos y Categorías (Especial Femenino)</span>
             </button>
             <button
-              onClick={() => handleNavClick('seccion')}
-              className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-between ${
-                activeTab === 'seccion' ? 'bg-emerald-700 text-white' : 'bg-blue-950 text-white'
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                {isUnlocked ? <Unlock className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
-                <span>Área Privada de Sección (Contraseña + Drive)</span>
-              </div>
-              <span className="text-[10px] bg-white/15 px-2 py-0.5 rounded">🔒</span>
-            </button>
-            <button
               onClick={() => handleNavClick('contacto')}
               className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2.5 ${
                 activeTab === 'contacto' ? 'bg-emerald-700 text-white' : 'text-slate-700 hover:bg-slate-100'
@@ -227,6 +191,18 @@ function MainAppContent() {
             >
               <Mail className="w-4 h-4" />
               <span>Contacto y Localización</span>
+            </button>
+            <button
+              onClick={() => handleNavClick('seccion')}
+              className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-between ${
+                activeTab === 'seccion' ? 'bg-emerald-700 text-white' : 'bg-blue-950 text-white'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                {isUnlocked ? <Unlock className="w-4 h-4 text-emerald-300" /> : <Lock className="w-4 h-4 text-amber-400" />}
+                <span>Área Privada de Sección (Contraseña + Drive)</span>
+              </div>
+              <span className="text-[10px] bg-white/15 px-2 py-0.5 rounded font-mono">Drive</span>
             </button>
           </div>
         )}
@@ -237,31 +213,31 @@ function MainAppContent() {
         {/* TAB 1: INICIO */}
         {activeTab === 'inicio' && (
           <div className="space-y-16">
-            {/* HERO SPLIT SHOWCASE: Clean white layout with official logo colors and real Senior Femenino photo */}
+            {/* HERO SPLIT SHOWCASE: Clean white layout with emerald, navy & amber accents and real Senior Femenino photo */}
             <div className="rounded-3xl sm:rounded-[36px] border border-slate-200 bg-slate-50/70 overflow-hidden shadow-sm">
               <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
                 {/* Left Copy */}
                 <div className="lg:col-span-6 p-7 sm:p-12 space-y-6">
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-blue-950 text-xs font-bold tracking-wide uppercase shadow-2xs">
-                    <Shield className="w-3.5 h-3.5 text-red-600" />
+                    <Shield className="w-3.5 h-3.5 text-emerald-700" />
                     <span>Agrupación Deportiva San Juan • Pamplona</span>
                   </div>
 
                   <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight leading-[1.08] font-display">
                     SECCIÓN DE <br />
                     <span className="text-emerald-700">BALONMANO</span>{' '}
-                    <span className="text-red-600">ADSJ</span>
+                    <span className="text-blue-950">ADSJ</span>
                   </h1>
 
                   <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl">
                     Portal oficial de la sección de balonmano de la AD San Juan (Donibane). Pasión, formación y un proyecto referente en balonmano femenino y deporte base navarro.
                   </p>
 
-                  {/* Tri-color accent line */}
+                  {/* Club tri-color accent line (Emerald + Navy + Gold) */}
                   <div className="flex items-center gap-1.5 h-1.5 w-36 rounded-full overflow-hidden">
-                    <div className="flex-1 h-full bg-red-600" />
-                    <div className="flex-1 h-full bg-blue-950" />
                     <div className="flex-1 h-full bg-emerald-700" />
+                    <div className="flex-1 h-full bg-blue-950" />
+                    <div className="flex-1 h-full bg-amber-500" />
                   </div>
 
                   <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -274,11 +250,11 @@ function MainAppContent() {
                     </button>
 
                     <button
-                      onClick={() => handleNavClick('seccion')}
+                      onClick={() => handleNavClick('equipos')}
                       className="px-6 py-3.5 bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs sm:text-sm rounded-2xl shadow-sm flex items-center gap-2 cursor-pointer transition-all"
                     >
-                      <Lock className="w-4 h-4 text-red-400" />
-                      <span>Área Privada de Sección</span>
+                      <Users className="w-4 h-4 text-emerald-300" />
+                      <span>Equipos y Plantillas</span>
                     </button>
 
                     <button
@@ -321,7 +297,7 @@ function MainAppContent() {
               {[
                 { number: '6', label: 'Equipos Federados', desc: 'Cantera y Senior Femenino', icon: Trophy, color: 'text-emerald-700', bg: 'bg-emerald-50' },
                 { number: '+110', label: 'Jugadoras y Jugadores', desc: 'Compitiendo en Navarra', icon: Users, color: 'text-blue-950', bg: 'bg-blue-50' },
-                { number: '14', label: 'Técnicos Titulados', desc: 'Formación y valores', icon: Award, color: 'text-red-600', bg: 'bg-red-50' },
+                { number: '14', label: 'Técnicos Titulados', desc: 'Formación y valores', icon: Award, color: 'text-amber-600', bg: 'bg-amber-50' },
                 { number: '100%', label: 'Sentimiento Verde', desc: 'Pabellón Polideportivo', icon: Flame, color: 'text-emerald-700', bg: 'bg-emerald-50' },
               ].map((stat, idx) => (
                 <div
@@ -349,10 +325,10 @@ function MainAppContent() {
                 className="bg-white border border-slate-200 hover:border-emerald-600 rounded-3xl p-6 transition-all duration-300 shadow-xs hover:shadow-xl cursor-pointer group flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center text-red-600 mb-4 group-hover:scale-105 transition-transform">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-950 mb-4 group-hover:scale-105 transition-transform">
                     <Newspaper className="w-6 h-6" />
                   </div>
-                  <span className="text-[11px] font-bold text-red-600 uppercase tracking-wider">
+                  <span className="text-[11px] font-bold text-blue-900 uppercase tracking-wider">
                     Actualidad
                   </span>
                   <h3 className="text-xl font-bold text-slate-900 font-display mt-1">
@@ -428,7 +404,7 @@ function MainAppContent() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-red-600">Nuestra Identidad</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">Nuestra Identidad</span>
                   <h3 className="text-2xl font-extrabold text-slate-900 font-display">Balonmano Femenino y Cantera</h3>
                 </div>
                 <button
@@ -488,8 +464,8 @@ function MainAppContent() {
             {/* INSTALACIONES Y PABELLÓN */}
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="space-y-4 max-w-xl">
-                <div className="flex items-center gap-2 text-red-600 text-xs font-bold uppercase tracking-wider">
-                  <MapPin className="w-4 h-4" />
+                <div className="flex items-center gap-2 text-blue-900 text-xs font-bold uppercase tracking-wider">
+                  <MapPin className="w-4 h-4 text-emerald-700" />
                   <span>Instalaciones AD San Juan • Donibane</span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display">
@@ -607,7 +583,7 @@ function MainAppContent() {
                 {isUnlocked ? (
                   <button
                     onClick={lockSection}
-                    className="px-3 py-1.5 bg-white border border-red-200 text-red-700 font-semibold rounded-lg text-xs hover:bg-red-50 cursor-pointer"
+                    className="px-3 py-1.5 bg-white border border-amber-300 text-amber-800 font-semibold rounded-lg text-xs hover:bg-amber-50 cursor-pointer"
                   >
                     Cerrar sesión de sección
                   </button>

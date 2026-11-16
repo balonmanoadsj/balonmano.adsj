@@ -12,7 +12,7 @@ import {
 import { NewsArticle, INITIAL_NEWS } from '../data/news';
 import { handballImages } from '../assets/images';
 
-const STORAGE_KEY_NEWS = 'adsj_handball_news_list_v2';
+const STORAGE_KEY_NEWS = 'adsj_handball_news_list_v3';
 
 export const NewsSection: React.FC = () => {
   const [news, setNews] = useState<NewsArticle[]>(() => {
@@ -108,8 +108,8 @@ export const NewsSection: React.FC = () => {
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-5 border-b border-slate-200">
         <div>
-          <div className="flex items-center gap-2 text-red-600 text-xs font-bold uppercase tracking-wider mb-2">
-            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+          <div className="flex items-center gap-2 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
             <span>Actualidad y Crónicas</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight font-display">
@@ -218,7 +218,7 @@ export const NewsSection: React.FC = () => {
                   {item.id.startsWith('custom-news') && (
                     <button
                       onClick={(e) => handleDeleteArticle(item.id, e)}
-                      className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-red-600 text-slate-700 hover:text-white rounded-xl shadow-sm transition-colors"
+                      className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-slate-900 text-slate-700 hover:text-white rounded-xl shadow-sm transition-colors"
                       title="Eliminar noticia"
                     >
                       <Trash2 className="w-3.5 h-3.5" />

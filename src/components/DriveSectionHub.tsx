@@ -140,9 +140,9 @@ export const DriveSectionHub: React.FC = () => {
       {/* Top Banner with security badge and lock controls */}
       <div className="bg-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-sm">
         <div className="absolute top-0 left-0 right-0 h-1.5 flex">
-          <div className="flex-1 bg-red-600" />
-          <div className="flex-1 bg-blue-950" />
           <div className="flex-1 bg-emerald-700" />
+          <div className="flex-1 bg-blue-950" />
+          <div className="flex-1 bg-amber-500" />
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10 pt-1">
@@ -165,9 +165,9 @@ export const DriveSectionHub: React.FC = () => {
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={lockSection}
-              className="px-4 py-2 bg-white hover:bg-red-50 text-slate-700 hover:text-red-700 text-xs font-semibold rounded-xl border border-slate-300 flex items-center gap-2 transition-all cursor-pointer shadow-xs"
+              className="px-4 py-2 bg-white hover:bg-amber-50 text-slate-700 hover:text-amber-900 text-xs font-semibold rounded-xl border border-slate-300 flex items-center gap-2 transition-all cursor-pointer shadow-xs"
             >
-              <LogOut className="w-3.5 h-3.5 text-red-600" />
+              <LogOut className="w-3.5 h-3.5 text-amber-600" />
               <span>Bloquear Sección</span>
             </button>
           </div>
@@ -702,7 +702,7 @@ export const DriveSectionHub: React.FC = () => {
                 className={`p-3 rounded-xl text-xs border ${
                   passMessage.ok
                     ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                    : 'bg-red-50 border-red-200 text-red-700'
+                    : 'bg-amber-50 border-amber-200 text-amber-900'
                 }`}
               >
                 {passMessage.text}

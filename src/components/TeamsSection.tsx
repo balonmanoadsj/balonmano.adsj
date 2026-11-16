@@ -65,7 +65,7 @@ export const TeamsSection: React.FC = () => {
             />
             {isSeniorFem && (
               <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-sm text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-md border border-slate-200">
-                <Camera className="w-3.5 h-3.5 text-red-600" />
+                <Camera className="w-3.5 h-3.5 text-emerald-700" />
                 <span>Foto Oficial Temporada Actual</span>
               </div>
             )}
@@ -74,7 +74,7 @@ export const TeamsSection: React.FC = () => {
           <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-slate-50/70 border-t lg:border-t-0 lg:border-l border-slate-200">
             <div className="space-y-4">
               <div>
-                <span className="text-[11px] font-bold text-red-600 uppercase tracking-wider">
+                <span className="text-[11px] font-bold text-blue-900 uppercase tracking-wider">
                   {selectedTeam.division}
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-black text-slate-900 font-display mt-1">
@@ -124,7 +124,7 @@ export const TeamsSection: React.FC = () => {
                 </div>
 
                 <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                  <MapPin className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                   <div>
                     <div className="text-[11px] text-slate-500">Instalación:</div>
                     <div className="font-semibold text-slate-900">{selectedTeam.court}</div>

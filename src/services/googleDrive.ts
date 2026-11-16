@@ -168,7 +168,7 @@ export function getFileIconBadge(mimeType: string) {
     return { label: 'DOCX', color: 'bg-blue-600 text-white', icon: 'FileText' };
   }
   if (mimeType.includes('pdf')) {
-    return { label: 'PDF', color: 'bg-rose-600 text-white', icon: 'FileCode' };
+    return { label: 'PDF', color: 'bg-blue-900 text-white', icon: 'FileCode' };
   }
   if (mimeType.includes('presentation') || mimeType.includes('powerpoint')) {
     return { label: 'PPTX', color: 'bg-amber-600 text-white', icon: 'Presentation' };

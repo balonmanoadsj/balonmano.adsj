@@ -31,11 +31,11 @@ export const SectionLockGate: React.FC<{ onSuccess?: () => void }> = ({ onSucces
           shake ? 'translate-x-[-8px]' : ''
         }`}
       >
-        {/* Top club tri-color accent bar */}
+        {/* Top club accent bar (Navy + Emerald + Gold) */}
         <div className="absolute top-0 left-0 right-0 h-1.5 flex">
-          <div className="flex-1 bg-red-600" />
-          <div className="flex-1 bg-blue-950" />
           <div className="flex-1 bg-emerald-700" />
+          <div className="flex-1 bg-blue-950" />
+          <div className="flex-1 bg-amber-500" />
         </div>
 
         {/* Header Icon & Club Logo */}
@@ -45,8 +45,8 @@ export const SectionLockGate: React.FC<{ onSuccess?: () => void }> = ({ onSucces
           </div>
 
           <div className="block">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-bold uppercase tracking-wider mb-2">
-              <Lock className="w-3.5 h-3.5" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-950 text-xs font-bold uppercase tracking-wider mb-2">
+              <Lock className="w-3.5 h-3.5 text-emerald-700" />
               <span>Zona Restringida</span>
             </span>
           </div>
@@ -93,8 +93,8 @@ export const SectionLockGate: React.FC<{ onSuccess?: () => void }> = ({ onSucces
           </div>
 
           {authError && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2.5 text-xs text-red-700">
-              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+            <div className="p-3 bg-amber-50 border border-amber-300 rounded-xl flex items-start gap-2.5 text-xs text-amber-900">
+              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
               <span>{authError}</span>
             </div>
           )}
